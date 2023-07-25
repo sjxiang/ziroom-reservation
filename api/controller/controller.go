@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"github.com/sjxiang/ziroom-reservation/db"
 	"go.uber.org/zap"
+
+	"github.com/sjxiang/ziroom-reservation/internal/db"
 )
 
 type Controller struct {

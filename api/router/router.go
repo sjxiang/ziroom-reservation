@@ -19,38 +19,38 @@ func NewRouter(controller *controller.Controller) *Router {
 
 func (r *Router) RegisterRouters(engine *gin.Engine) {
 	// auth           = app.Group("/api")
-	// apiv1          = app.Group("/api/v1", api.JWTAuthentication(userStore))
+	apiv1          := engine.Group("/api/v1")
 	// admin          = apiv1.Group("/admin", api.AdminAuth)
 
 	// // auth
 	// auth.Post("/auth", authHandler.HandleAuthenticate)
 
-	// // Versioned API routes
-	// // user handlers
-	// apiv1.Get("/user/:id", userHandler.HandleGetUser)
-	// apiv1.Put("/user/:id", userHandler.HandlePutUser)
-	// apiv1.Delete("/user/:id", userHandler.HandleDeleteUser)
-	// apiv1.Post("/user", userHandler.HandlePostUser)
-	// apiv1.Get("/user", userHandler.HandleGetUsers)
+	// user handler
+	apiv1.GET("/user/:id", r.Controller.GetUserInfo)
+	apiv1.PUT("/user/:id", r.Controller.UpdateUserInfo)
+	apiv1.DELETE("/user/:id", r.Controller.DeleteUserInfo)
+	apiv1.POST("/user", r.Controller.CreateUserInfo)
+	apiv1.GET("/user", r.Controller.GetUserList)
 
-	// // hotel handlers
+	// hotel handlers
 	// apiv1.Get("/hotel", hotelHandler.HandleGetHotels)
 	// apiv1.Get("/hotel/:id", hotelHandler.HandleGetHotel)
 	// apiv1.Get("/hotel/:id/rooms", hotelHandler.HandleGetRooms)
 
-	// // rooms handlers
+	// rooms handlers
 	// apiv1.Get("/room", roomHandler.HandleGetRooms)
 	// apiv1.Post("/room/:id/book", roomHandler.HandleBookRoom)
 	// // TODO: cancel a booking
 
-	// // bookings handlers
+	// bookings handlers
 	// apiv1.Get("/booking/:id", bookingHandler.HandleGetBooking)
 	// apiv1.Get("/booking/:id/cancel", bookingHandler.HandleCancelBooking)
 
-	// // admin handlers
+	// admin handlers
 	// admin.Get("/booking", bookingHandler.HandleGetBookings)
 	// routerGroup := engine.Group("/api/v1")
 
+	
 	// authRouter := routerGroup.Group("/auth")
 	// usersRouter := routerGroup.Group("/users")
 	// teamsRouter := routerGroup.Group("/teams")

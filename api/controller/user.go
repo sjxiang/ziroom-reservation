@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/sjxiang/ziroom-reservation/db"
+	"github.com/sjxiang/ziroom-reservation/internal/db"
 	"github.com/sjxiang/ziroom-reservation/types"
 )
 
@@ -29,6 +29,7 @@ func (ctrl *Controller) UpdateUserInfo(ctx *gin.Context) {
 
 	filter := db.Map{"_id": userID}
 	if err := ctrl.Store.User.UpdateUser(context.TODO(), filter, params); err != nil {
+		ctrl.logger.Infow("data query exception", "err", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"Code": -1,
 			"Msg":  "data query exception",
@@ -38,6 +39,23 @@ func (ctrl *Controller) UpdateUserInfo(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"Msg":  "更新成功",
+		"Data": userID,
+	})
+}
+
+func (ctrl *Controller) DeleteUserInfo(ctx *gin.Context) {
+	userID := ctx.Param("id")
+	if err := ctrl.Store.User.DeleteUser(context.TODO(), userID); err != nil {
+		ctrl.logger.Infow("data query exception", "err", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"Code": -1,
+			"Msg":  "data query exception",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"Msg":  "删除成功",
 		"Data": userID,
 	})
 }
@@ -58,6 +76,7 @@ func (ctrl *Controller) CreateUserInfo(ctx *gin.Context) {
 	user, _ := types.NewUserFromParams(params)
 	insertedUser, err := ctrl.Store.User.InsertUser(context.TODO(), user)
 	if err != nil {
+		ctrl.logger.Infow("data query exception", "err", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"Code": -1,
 			"Msg":  "data query exception",
@@ -79,16 +98,18 @@ func (ctrl *Controller) GetUserInfo(ctx *gin.Context) {
 	user, err := ctrl.Store.User.GetUserByID(context.TODO(), id)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
+			ctrl.logger.Infow("resource not found", "id", id, "err", err)
 			ctx.JSON(http.StatusNotFound, gin.H{
 				"Code": -1,
-				"Msg": "not found",
+				"Msg": "resource not found",
 			})
 			return 
 		}
 
-		ctx.JSON(http.StatusInternalServerError, gin.H{
+		ctrl.logger.Infow("data query exception", "err", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"Code": -1,
-			"Msg": "internal server error",
+			"Msg":  "data query exception",
 		})
 		return 
 	}
@@ -105,16 +126,18 @@ func (ctrl *Controller) GetUserList(ctx *gin.Context) {
 	
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
+			ctrl.logger.Infow("resource not found", "err", err)
 			ctx.JSON(http.StatusNotFound, gin.H{
 				"Code": -1,
-				"Msg": "not found",
+				"Msg": "resource not found",
 			})
-			return 
+			return  
 		}
 
-		ctx.JSON(http.StatusInternalServerError, gin.H{
+		ctrl.logger.Infow("data query exception", "err", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"Code": -1,
-			"Msg": "internal server error",
+			"Msg":  "data query exception",
 		})
 		return 
 	}

@@ -12,7 +12,7 @@ import (
 	
 	"github.com/sjxiang/ziroom-reservation/api/controller"
 	"github.com/sjxiang/ziroom-reservation/api/router"
-	"github.com/sjxiang/ziroom-reservation/db"
+	"github.com/sjxiang/ziroom-reservation/internal/db"
 	"github.com/sjxiang/ziroom-reservation/pkg/logger"
 )
 

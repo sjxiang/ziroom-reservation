@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/sjxiang/ziroom-reservation/types"
-	"github.com/sjxiang/ziroom-reservation/db"
+	"github.com/sjxiang/ziroom-reservation/internal/db"
 )
 
 func AddBooking(store *db.Store, uid, rid primitive.ObjectID, from, till time.Time) *types.Booking {
