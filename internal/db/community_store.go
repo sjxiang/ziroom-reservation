@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
 
-	"github.com/sjxiang/ziroom-reservation/types"
+	"github.com/sjxiang/ziroom-reservation/internal/types"
 )
 
 type CommunityStore interface {

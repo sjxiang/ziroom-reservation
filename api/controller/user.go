@@ -2,14 +2,14 @@ package controller
 
 import (
 	"context"
-	"net/http"
 	"errors"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/sjxiang/ziroom-reservation/internal/db"
-	"github.com/sjxiang/ziroom-reservation/types"
+	"github.com/sjxiang/ziroom-reservation/internal/types"
 )
 
 

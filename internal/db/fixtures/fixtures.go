@@ -8,7 +8,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/sjxiang/ziroom-reservation/types"
+	"github.com/sjxiang/ziroom-reservation/internal/types"
 	"github.com/sjxiang/ziroom-reservation/internal/db"
 )
 

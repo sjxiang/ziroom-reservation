@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 
-	"github.com/sjxiang/ziroom-reservation/types"
+	"github.com/sjxiang/ziroom-reservation/internal/types"
 )
 
 type BookingStore interface {
