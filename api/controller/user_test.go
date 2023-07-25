@@ -3,9 +3,10 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"testing"
-	
+
 	"github.com/sjxiang/ziroom-reservation/internal/types"
 )
 
@@ -21,7 +22,7 @@ func TestPostUser(t *testing.T) {
 	buf, _ := json.Marshal(params)
 
 	// 创建请求
-	req, err := http.NewRequest("POST", "localhost:8001/api/v1/user", bytes.NewReader(buf))
+	req, err := http.NewRequest("POST", "http://0.0.0.0:8001/api/v1/user", bytes.NewReader(buf))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,9 +36,22 @@ func TestPostUser(t *testing.T) {
 	}
 	defer resp.Body.Close()  
 
-	var user types.User
-	json.NewDecoder(resp.Body).Decode(&user)
+	bodyText, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
 	
+	var user types.User
+	// bug - 塞了提示信息，所以 json 序列化不行
+	err = json.Unmarshal(bodyText, &user)
+
+	// 方法 - 2
+	// json.NewDecoder(resp.Body).Decode(&user)
+	
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	if len(user.ID) == 0 {
 		t.Errorf("expecting a user id to be set")
 	}
@@ -48,7 +62,7 @@ func TestPostUser(t *testing.T) {
 		t.Errorf("expected firstname %s but got %s", params.FirstName, user.FirstName)
 	}
 	if user.LastName != params.LastName {
-		t.Errorf("expected last name %s but got %s", params.LastName, user.LastName)
+		t.Errorf("expected lastname %s but got %s", params.LastName, user.LastName)
 	}
 	if user.Email != params.Email {
 		t.Errorf("expected email %s but got %s", params.Email, user.Email)
