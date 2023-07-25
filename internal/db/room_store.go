@@ -21,6 +21,7 @@ type MongoRoomStoreImpl struct {
 	logger *zap.SugaredLogger
 	coll   *mongo.Collection
 
+	// 依赖项
 	CommunityStore
 }
 
