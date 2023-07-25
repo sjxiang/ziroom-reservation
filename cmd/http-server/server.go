@@ -4,11 +4,11 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+	"github.com/joho/godotenv"
 
 	"github.com/sjxiang/ziroom-reservation/api/router"
-	"github.com/sjxiang/ziroom-reservation/api/mws"
+	"github.com/sjxiang/ziroom-reservation/pkg/mws"
 )
 
 type Config struct {
@@ -31,16 +31,16 @@ func GetAppConfig() (*Config, error) {
 
 type Server struct {
 	engine     *gin.Engine
-	restRouter *router.RESTRouter
+	Router     *router.Router
 	logger     *zap.SugaredLogger
 	cfg        *Config
 }
 
-func NewServer(cfg *Config, engine *gin.Engine, restRouter *router.RESTRouter, logger *zap.SugaredLogger) *Server {
+func NewServer(cfg *Config, engine *gin.Engine, Router *router.Router, logger *zap.SugaredLogger) *Server {
 	return &Server{
 		cfg:        cfg,
 		engine:     engine,
-		restRouter: restRouter,
+		Router:     Router,
 		logger:     logger,
 	}
 }
@@ -48,14 +48,15 @@ func NewServer(cfg *Config, engine *gin.Engine, restRouter *router.RESTRouter, l
 func (server *Server) Start() {
 	server.logger.Infow("Starting server")
 	
+	// init
 	gin.SetMode(server.cfg.ZIROOM_SERVER_MODE)
 
-	// 全局中间件，cors
+	// init cors（全局中间件）
 	server.engine.Use(gin.CustomRecovery(mws.CorsHandleRecovery))
 	server.engine.Use(mws.Cors())
 
 	// 经络（打通任督二脉）
-	server.restRouter.InitRouter(server.engine.Group("/api"))
+	server.Router.RegisterRouters(server.engine)
 
 	err := server.engine.Run(server.cfg.ZIROOM_SERVER_HOST + ":" + server.cfg.ZIROOM_SERVER_PORT)
 	if err != nil {

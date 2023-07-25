@@ -14,8 +14,6 @@ import (
 
 const userColl = "users"
 
-type Map map[string]any
-
 type Dropper interface {
 	Drop(context.Context) error
 }
@@ -32,8 +30,8 @@ type UserStore interface {
 }
 
 type MongoUserStoreImpl struct {
-	coll   *mongo.Collection
 	logger *zap.SugaredLogger
+	coll   *mongo.Collection
 }
 
 func NewMongoUserStoreImpl(logger *zap.SugaredLogger, client *mongo.Client) *MongoUserStoreImpl {

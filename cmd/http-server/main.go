@@ -1,14 +1,8 @@
 package main
 
-import (
-	"log"
-	"os"
-)
-
+import "log"
 
 func main() {
-	// set trial key for self-host users
-	os.Setenv("ZIROOM_SECRET_KEY", "8xEMrWkBARcDDYQ")
 	// init
 	server, err := Initialize()
 	if err != nil {

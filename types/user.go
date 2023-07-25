@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 	"regexp"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -59,16 +60,16 @@ type User struct {
 }
 
 func NewUserFromParams(params CreateUserParams) (*User, error) {
-	// now := time.Unix(sec int64, nsec int64)
-	encpw, err := bcrypt.GenerateFromPassword([]byte(params.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return nil, err
-	}
+
+	now := time.Now().Unix()
+	encpw, _ := bcrypt.GenerateFromPassword([]byte(params.Password), bcrypt.DefaultCost)
 
 	return &User{
 		FirstName:         params.FirstName,
 		LastName:          params.LastName,
 		Email:             params.Email,
 		EncryptedPassword: string(encpw),
+		CreatedAt:         now,
+		UpdatedAt:         now,
 	}, nil
 }
