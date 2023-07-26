@@ -15,6 +15,7 @@ import (
 	"github.com/sjxiang/ziroom-reservation/internal/db"
 	"github.com/sjxiang/ziroom-reservation/internal/db/fixtures"
 	"github.com/sjxiang/ziroom-reservation/pkg/logger"
+	"github.com/sjxiang/ziroom-reservation/pkg/mws"
 )
 
 func main() {
@@ -42,18 +43,16 @@ func main() {
 	bookingStore   := db.NewMongoBookingStoreImpl(sugaredLogger, client)
 	store := db.NewStore(userStore, roomStore, communityStore, bookingStore)
 
-
+	// 注入数据（绕过 JWT）
 	user := fixtures.AddUser(store, "xiang", "qq", false)
-	fmt.Println("james ->", user)
+	fmt.Println("xiang ->", mws.CreateTokenFromUser(user))
 	
-	// fmt.Println("james ->", api.CreateTokenFromUser(user))
-	
-	// admin := fixtures.AddUser(store, "admin", "admin", true)
-	// fmt.Println("admin ->", api.CreateTokenFromUser(admin))
+	admin := fixtures.AddUser(store, "admin", "admin", true)
+	fmt.Println("admin ->", mws.CreateTokenFromUser(admin))
 	
 	community := fixtures.AddCommunity(store, "laimeng", "yuhuatai", 5, nil)
 	room := fixtures.AddRoom(store, "large", true, 88.44, community.ID)
-	booking := fixtures.AddBooking(store, user.ID, room.ID, time.Now(), time.Now().AddDate(0, 0, 5))
+	booking := fixtures.AddBooking(store, user.ID, room.ID, time.Now(), time.Now().AddDate(0, 0, 5))  // 这个时间设置可以
 	fmt.Println("booking ->", booking.ID)
 
 	for i := 0; i < 100; i++ {

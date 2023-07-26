@@ -46,7 +46,9 @@ func TestPostUser(t *testing.T) {
 	err = json.Unmarshal(bodyText, &user)
 
 	// 方法 - 2
-	// json.NewDecoder(resp.Body).Decode(&user)
+	// if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
+	//     t.Fatal(err)
+	// }
 	
 	if err != nil {
 		t.Fatal(err)
